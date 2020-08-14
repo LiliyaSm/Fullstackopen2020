@@ -1,0 +1,12 @@
+note over browser:
+user submits the form, js adds new note to the page 
+and sends the note to the server.
+end note
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+note over server:
+server adds new note to the list
+which is stored on the server
+end note
+
+server-->browser: Status Code: 201 Created
+
