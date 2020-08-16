@@ -11,9 +11,10 @@ const Button = (props) => (
 
 const Statistic = (props) => {
     return (
-        <div>
-            {props.text} {props.value}
-        </div>
+        <tr>
+            <td>{props.text} </td>
+            <td>{props.value}</td>
+        </tr>
     );
 };
 
@@ -30,21 +31,21 @@ const Statistics = (props) => {
         average = 0;
     }
 
-    if (all){
-    return (
-        <div>
-            <Statistic text="good" value={props.good} />
-            <Statistic text="neutral" value={props.neutral} />
-            <Statistic text="bad" value={props.bad} />
-            <Statistic text="all" value={all} />
-            <Statistic text="positive" value={positive + " %"} />
-            <Statistic text="average" value={average} />
-        </div>
-    );
+    if (all) {
+        return (
+            <table>
+                <tbody>
+                    <Statistic text="good" value={props.good} />
+                    <Statistic text="neutral" value={props.neutral} />
+                    <Statistic text="bad" value={props.bad} />
+                    <Statistic text="all" value={all} />
+                    <Statistic text="positive" value={positive + " %"} />
+                    <Statistic text="average" value={average} />
+                </tbody>
+            </table>
+        );
     } else {
-        return <div>
-            No feedback given
-        </div>
+        return <div>No feedback given</div>;
     }
 };
 
