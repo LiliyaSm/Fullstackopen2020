@@ -5,19 +5,33 @@ const Button = (props) => (
     <button onClick={props.handleClick}>{props.text}</button>
 );
 
+const Best = ({ vote, anecdotes }) => {
+    //get index of the anecdote with the largest number of votes
+    const indexOfMaxValue = vote.indexOf(Math.max(...vote));
+    return (
+        <div>
+            <div>{anecdotes[indexOfMaxValue]}</div>
+            <div>has {vote[indexOfMaxValue]} votes </div>
+        </div>
+    );
+};
+
 const App = (props) => {
     const [selected, setSelected] = useState(props.anecdotes[0]);
     // state of the current anecdote index
     const [index, setIndex] = useState(0);
 
+    
+    // create array for storing votes and fill with ziros
     const points = new Array(anecdotes.length).fill(0);
     const [vote, setVote] = useState(points);
 
-    const handleClick = () => {
+    const handleNext = () => {
+        //get random anecdote
         const anecdote =
-        props.anecdotes[Math.floor(Math.random() * anecdotes.length)];     
+            props.anecdotes[Math.floor(Math.random() * anecdotes.length)];
 
-        // get index of current anecdote
+        // get index of random anecdote
         const i = props.anecdotes.indexOf(anecdote);
 
         setSelected(anecdote);
@@ -32,13 +46,16 @@ const App = (props) => {
 
     return (
         <div>
+            <h1>Anecdote of the day</h1>
             <div>{selected}</div>
             <div>has {vote[index]} votes </div>
             <br />
             <div>
                 <Button handleClick={handleVote} text="vote" />
-                <Button handleClick={handleClick} text="next anecdote" />
+                <Button handleClick={handleNext} text="next anecdote" />
             </div>
+            <h1>Anecdote with the most votes</h1>
+            <Best vote={vote} anecdotes={props.anecdotes} />
         </div>
     );
 };
