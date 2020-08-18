@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 
 const Person = ({ person }) => {
-    return (
-                <div>{person.name}</div>
-    );
+    return <div>{person.name}</div>;
 };
 
 const App = () => {
@@ -15,8 +13,13 @@ const App = () => {
         const nameObject = {
             name: newName,
         };
+        // "some" tests whether at least one element in the array passes the test implemented by the provided function
+        if (persons.some((el) => el.name === nameObject.name)) {
+            alert(`${nameObject.name} is already added to phonebook`);
+        } else {
+            setPersons(persons.concat(nameObject));
+        }
 
-        setPersons(persons.concat(nameObject));
         setNewName("");
     };
 
@@ -37,7 +40,11 @@ const App = () => {
                 </div>
             </form>
             <h2>Numbers</h2>
-            <div>{persons.map((person)=> <Person key={person.name} person={person} />)}</div>
+            <div>
+                {persons.map((person) => (
+                    <Person key={person.name} person={person} />
+                ))}
+            </div>
         </div>
     );
 };
