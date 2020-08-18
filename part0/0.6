@@ -1,0 +1,12 @@
+note over browser:
+user submits the form
+end note
+browser->browser: add new note to notes array
+browser->browser: calls redrawNotes() to update DOM with latest notes
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+note over server:
+server adds new note to the list
+which is stored on the server
+end note
+
+server-->browser: Status Code: 201 Created
