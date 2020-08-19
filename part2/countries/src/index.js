@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
-import "./index.css"
+import "./index.css";
 
-const Country = ({ country }) => {
-    return <div>{country.name}</div>;
+const Button = ({ country, setCountriesToShow }) => {
+    const handleShowCountry = () => {
+        setCountriesToShow([country]);
+        console.log(country);
+    };
+    return <button onClick={handleShowCountry}>show</button>;
+};
+
+const Country = ({ country, setCountriesToShow }) => {
+    return (
+        <div>
+            {country.name}
+            <Button country={country} setCountriesToShow={setCountriesToShow} />;
+        </div>
+    );
 };
 
 const CountryDetail = ({ country }) => {
@@ -19,12 +32,12 @@ const CountryDetail = ({ country }) => {
                     <li key={index}>{language.name}</li>
                 ))}
             </ul>
-            <img src={country.flag} width="300px" alt="flag"/>
+            <img src={country.flag} width="300px" alt="flag" />
         </div>
     );
 };
 
-const Countries = ({ countriesToShow }) => {
+const Countries = ({ countriesToShow, setCountriesToShow }) => {
     if (countriesToShow.length === 0) {
         return <div>nothing found</div>;
     } else if (countriesToShow.length === 1) {
@@ -34,7 +47,11 @@ const Countries = ({ countriesToShow }) => {
         return (
             <div>
                 {countriesToShow.map((country) => (
-                    <Country key={country.name} country={country} />
+                    <Country
+                        key={country.name}
+                        country={country}
+                        setCountriesToShow={setCountriesToShow}
+                    />
                 ))}
             </div>
         );
@@ -45,11 +62,17 @@ const Countries = ({ countriesToShow }) => {
 
 const App = () => {
     const [filter, setFilter] = useState("");
-
     const [countries, setCountries] = useState([]);
+    const [countriesToShow, setCountriesToShow] = useState([]);
 
     const handleFilter = (event) => {
-        setFilter(event.target.value);
+        const filterValue = event.target.value;
+        setFilter(filterValue);
+        let filterResult = countries.filter((country) =>
+            country.name.toLowerCase().includes(filterValue.toLowerCase())
+        );
+        setCountriesToShow(filterResult)
+
         // axios.get("https://restcountries.eu/rest/v2/all").then((response) => {
         //     console.log("promise fulfilled");
         //     setCountries(response.data);
@@ -64,14 +87,13 @@ const App = () => {
         });
     }, []);
 
-    const countriesToShow = countries.filter((country) =>
-        country.name.toLowerCase().includes(filter.toLowerCase())
-    );
-
     return (
         <div>
             find countries: <input value={filter} onChange={handleFilter} />
-            <Countries countriesToShow={countriesToShow} />
+            <Countries
+                countriesToShow={countriesToShow}
+                setCountriesToShow={setCountriesToShow}
+            />
         </div>
     );
 };
