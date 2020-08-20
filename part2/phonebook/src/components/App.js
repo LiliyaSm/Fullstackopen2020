@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Filter from "./Filter";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
-import axios from "axios";
+import numbersService from "../services/numbers";
 
 const App = () => {
     const [persons, setPersons] = useState([]);
@@ -13,9 +13,8 @@ const App = () => {
     // empty array [] means that the effect is only run along with the first render of the component.
     useEffect(() => {
         console.log("effect");
-        axios.get("http://localhost:3001/persons").then((response) => {
-            console.log("promise fulfilled");
-            setPersons(response.data);
+        numbersService.getAll().then((response) => {
+            setPersons(response);
         });
     }, []);
 
@@ -35,11 +34,12 @@ const App = () => {
         if (persons.some((person) => person.name === nameObject.name)) {
             alert(`${nameObject.name} is already added to phonebook`);
         } else {
-            setPersons(persons.concat(nameObject));
+            numbersService.create(nameObject).then((response) => {
+                setPersons(persons.concat(response));
+                setNewName("");
+                setNewNumber("");
+            });
         }
-
-        setNewName("");
-        setNewNumber("");
     };
 
     const handleNewName = (event) => {

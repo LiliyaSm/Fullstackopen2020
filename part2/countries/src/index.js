@@ -3,19 +3,19 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 import "./index.css";
 
-const Button = ({ country, setCountriesToShow }) => {
-    const handleShowCountry = () => {
-        setCountriesToShow([country]);
-        console.log(country);
-    };
+const Button = ({ country, handleShowCountry }) => {
     return <button onClick={handleShowCountry}>show</button>;
 };
 
-const Country = ({ country, setCountriesToShow }) => {
+const Country = ({ country, handleShowCountryOf }) => {
     return (
         <div>
             {country.name}
-            <Button country={country} setCountriesToShow={setCountriesToShow} />;
+            <Button
+                country={country}
+                handleShowCountry={() => handleShowCountryOf(country)}
+            />
+            ;
         </div>
     );
 };
@@ -37,7 +37,7 @@ const CountryDetail = ({ country }) => {
     );
 };
 
-const Countries = ({ countriesToShow, setCountriesToShow }) => {
+const Countries = ({ countriesToShow, handleShowCountryOf }) => {
     if (countriesToShow.length === 0) {
         return <div>nothing found</div>;
     } else if (countriesToShow.length === 1) {
@@ -50,7 +50,7 @@ const Countries = ({ countriesToShow, setCountriesToShow }) => {
                     <Country
                         key={country.name}
                         country={country}
-                        setCountriesToShow={setCountriesToShow}
+                        handleShowCountryOf={handleShowCountryOf}
                     />
                 ))}
             </div>
@@ -64,6 +64,12 @@ const App = () => {
     const [filter, setFilter] = useState("");
     const [countries, setCountries] = useState([]);
     const [countriesToShow, setCountriesToShow] = useState([]);
+
+
+    const handleShowCountryOf = (country) => {
+        setCountriesToShow([country]);
+        console.log(country);
+    };
 
     const handleFilter = (event) => {
         const filterValue = event.target.value;
@@ -92,7 +98,7 @@ const App = () => {
             find countries: <input value={filter} onChange={handleFilter} />
             <Countries
                 countriesToShow={countriesToShow}
-                setCountriesToShow={setCountriesToShow}
+                handleShowCountryOf={handleShowCountryOf}
             />
         </div>
     );
