@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import Filter from "./Filter";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
+import Notification from "./Notification";
 import numbersService from "../services/numbers";
 
 const App = () => {
     const [persons, setPersons] = useState([]);
     const [newName, setNewName] = useState("");
     const [newNumber, setNewNumber] = useState("");
+    const [message, setMessage] = useState(null);
     const [filter, setFilter] = useState("");
 
     // empty array [] means that the effect is only run along with the first render of the component.
@@ -42,24 +44,40 @@ const App = () => {
                     `${nameObject.name} is already added to phonebook, replace the old number with a new one?`
                 )
             ) {
-                numbersService.update(newPerson.id, nameObject).then(() => {
-                    const copy = persons.map((person) => {
-                        if (person.id === newPerson.id) {
-                            person.number = nameObject.number;
-                        }
-                        return person;
-                    });
-                    setPersons(copy);
-                    setNewName("");
-                    setNewNumber("");
-                });
+                numbersService
+                    .update(newPerson.id, nameObject)
+                    .then(() => {
+                        const copy = persons.map((person) => {
+                            if (person.id === newPerson.id) {
+                                person.number = nameObject.number;
+                            }
+                            return person;
+                        });
+                        setPersons(copy);
+                        setNewName("");
+                        setNewNumber("");
+                    })
+                    .then(() => {
+                        setMessage(`Changed '${nameObject.name}'`);
+                        setTimeout(() => {
+                            setMessage(null);
+                        }, 4000);
+                    });;
             }
         } else {
-            numbersService.create(nameObject).then((response) => {
-                setPersons(persons.concat(response));
-                setNewName("");
-                setNewNumber("");
-            });
+            numbersService
+                .create(nameObject)
+                .then((response) => {
+                    setPersons(persons.concat(response));
+                    setNewName("");
+                    setNewNumber("");
+                })
+                .then(() => {
+                    setMessage(`Added '${nameObject.name}'`);
+                    setTimeout(() => {
+                        setMessage(null);
+                    }, 4000);
+                });
         }
     };
 
@@ -87,6 +105,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={message} />
             <Filter filter={filter} handleFilter={handleFilter} />
             <h2>Add a new</h2>
             <PersonForm
