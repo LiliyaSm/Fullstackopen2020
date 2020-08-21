@@ -30,9 +30,29 @@ const App = () => {
             name: newName,
             number: newNumber,
         };
-        // "some" tests whether at least one element in the array passes the test implemented by the provided function
-        if (persons.some((person) => person.name === nameObject.name)) {
-            alert(`${nameObject.name} is already added to phonebook`);
+        const newPerson = persons.find(
+            (person) => person.name === nameObject.name
+        );
+
+        // check if entry already exists
+        if (newPerson) {
+            if (
+                window.confirm(
+                    `${nameObject.name} is already added to phonebook, replace the old number with a ner one?`
+                )
+            ) {
+                numbersService.update(newPerson.id, nameObject).then(() => {
+                    const copy = persons.map((person) => {
+                        if (person.id === newPerson.id) {
+                            person.number = nameObject.number;
+                        }
+                        return person;
+                    });
+                    setPersons(copy);
+                    setNewName("");
+                    setNewNumber("");
+                });
+            }
         } else {
             numbersService.create(nameObject).then((response) => {
                 setPersons(persons.concat(response));
