@@ -27,8 +27,9 @@ const App = () => {
     const addName = (event) => {
         event.preventDefault();
         const nameObject = {
-            name: newName,
-            number: newNumber,
+            // trim to avoid duplicates
+            name: newName.trim(),
+            number: newNumber.trim(),
         };
         const newPerson = persons.find(
             (person) => person.name === nameObject.name
@@ -38,7 +39,7 @@ const App = () => {
         if (newPerson) {
             if (
                 window.confirm(
-                    `${nameObject.name} is already added to phonebook, replace the old number with a ner one?`
+                    `${nameObject.name} is already added to phonebook, replace the old number with a new one?`
                 )
             ) {
                 numbersService.update(newPerson.id, nameObject).then(() => {
