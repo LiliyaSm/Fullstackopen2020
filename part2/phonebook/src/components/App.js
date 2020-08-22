@@ -10,6 +10,7 @@ const App = () => {
     const [newName, setNewName] = useState("");
     const [newNumber, setNewNumber] = useState("");
     const [message, setMessage] = useState(null);
+    const [classNotification, setClassNotification] = useState(null);
     const [filter, setFilter] = useState("");
 
     // empty array [] means that the effect is only run along with the first render of the component.
@@ -59,10 +60,11 @@ const App = () => {
                     })
                     .then(() => {
                         setMessage(`Changed '${nameObject.name}'`);
+                        setClassNotification("info");
                         setTimeout(() => {
                             setMessage(null);
                         }, 4000);
-                    });;
+                    });
             }
         } else {
             numbersService
@@ -74,6 +76,8 @@ const App = () => {
                 })
                 .then(() => {
                     setMessage(`Added '${nameObject.name}'`);
+                    setClassNotification("info");
+
                     setTimeout(() => {
                         setMessage(null);
                     }, 4000);
@@ -84,10 +88,23 @@ const App = () => {
     const handleDeleteNameof = (personId) => {
         const person = persons.find((person) => person.id === personId);
         if (window.confirm(`Do you really want to delete ${person.name}?`)) {
-            numbersService.del(personId).then(() => {
-                //  filter used to not modify the original array
-                setPersons(persons.filter((person) => person.id !== personId));
-            });
+            numbersService
+                .del(personId)
+                .then(() => {
+                    //  filter used to not modify the original array
+                    setPersons(
+                        persons.filter((person) => person.id !== personId)
+                    );
+                })
+                .catch((error) => {
+                    setMessage(
+                        `Information of '${person.name}' was already removed from server`
+                    );
+                    setClassNotification("error");
+                    setTimeout(() => {
+                        setMessage(null);
+                    }, 4000);
+                });
         }
     };
 
@@ -105,7 +122,10 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <Notification message={message} />
+            <Notification
+                message={message}
+                classNotification={classNotification}
+            />
             <Filter filter={filter} handleFilter={handleFilter} />
             <h2>Add a new</h2>
             <PersonForm
