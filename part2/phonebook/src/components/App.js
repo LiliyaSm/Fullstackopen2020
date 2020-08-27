@@ -64,6 +64,16 @@ const App = () => {
                         setTimeout(() => {
                             setMessage(null);
                         }, 4000);
+                    })
+                    .catch((error) => {
+                        //  show the error message
+                        setMessage(`${error.response.data.error}`);
+                        setClassNotification("error");
+                        setTimeout(() => {
+                            setMessage(null);
+                        }, 4000);
+
+                        console.log(error.response.data);
                     });
             }
         } else {
@@ -81,9 +91,17 @@ const App = () => {
                     setTimeout(() => {
                         setMessage(null);
                     }, 4000);
-                });
-        }
-    };
+                }).catch(error => {
+                    //  show the error message
+                    setMessage(`${error.response.data.error}`);
+                    setClassNotification("error");
+                    setTimeout(() => {
+                        setMessage(null);
+                    }, 4000);
+
+                    console.log(error.response.data);
+        })}
+    }
 
     const handleDeleteNameof = (personId) => {
         const person = persons.find((person) => person.id === personId);
